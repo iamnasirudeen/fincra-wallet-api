@@ -19,7 +19,9 @@ export class UserService {
   ) {}
 
   public async findById(id: Types.ObjectId): Promise<UserDocument> {
-    return this.userModel.findById(id).select('-password'); // this is only used in my middlewares so there's no point returning password
+    const user = await this.userModel.findById(id).select('-password'); // this is only used in my middlewares so there's no point returning password
+    if (!user) throw new BadRequestException('User not found');
+    return user;
   }
 
   public async findByEmail(email: string): Promise<UserDocument> {
